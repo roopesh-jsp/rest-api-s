@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
-  name: String,
+  title: String,
+  content: String,
 });
 
 export const posts = mongoose.model("posts", postSchema);
