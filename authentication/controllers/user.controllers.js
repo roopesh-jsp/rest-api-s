@@ -42,4 +42,32 @@ const signup = async (req, res) => {
   }
 };
 
-export { signup };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      throw new Error("user not exist try sigin");
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    // console.log(isMatch);
+
+    if (!isMatch) {
+      throw new Error("wrong credientials");
+    }
+    const token = jwt.sign({ id: user._id }, "secret");
+    res.cookie("token", token);
+    res.json({
+      msg: "logged",
+      sucess: true,
+      user: user,
+    });
+  } catch (error) {
+    res.json({
+      sucess: false,
+      msg: error.message,
+    });
+  }
+};
+export { signup, login };
